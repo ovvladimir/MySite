@@ -1,0 +1,16 @@
+@font-face {
+    font-family: Neuton;
+    src: url(../fonts/Neuton-Regular.ttf);
+}
+#brand {
+    font-family: Neuton;
+}
+
+@font-face {
+    font-family: JetBrainsMono;
+    src: url(../fonts/JetBrainsMono-Bold.woff2) format('woff2');
+    font-weight: bold;
+}
+#font {
+    font-family: JetBrainsMono;
+}

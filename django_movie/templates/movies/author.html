@@ -1,0 +1,36 @@
+{% extends 'movies/base.html' %}
+{% load static %}
+{% block title %} {{ actor.name }} {% endblock title %}
+{% block container %}
+    <div class="container py-md-3">
+{% endblock container %}
+
+{% block sidebar %}
+    <div class="col-md-4">
+{% endblock sidebar %}
+
+{% block movie %}
+    <div class="col-md-8">
+        <div class="row">
+            <div class="figure col-md-8">
+                <img src="{% static 'images/' %}{{ actor.image }}" class="figure-img img-fluid rounded" alt="">
+            </div>
+            <div class="social col-md-4 text-center">
+                <a href="https://github.com/ovvladimir/">
+                    <i class="fab fa-github-square fa-8x text-danger"></i>
+                </a>
+            </div>
+        </div>
+        <figure class="figure">
+            <h4 class="text-primary mt-5">
+                О {{ actor.name }}
+            </h4>
+            <figcaption class="figure-caption">
+                {{ actor.description|safe }}
+            </figcaption>
+        </figure>
+
+    </div>
+    </div>
+    </div>
+{% endblock movie %}

@@ -1,0 +1,63 @@
+/* BODY */
+/*body {background: linear-gradient(-90deg, #282a36, #44475a);}*/
+body a:hover { text-decoration: none; }
+.grecaptcha-badge { visibility: hidden; }
+/* END BODY */
+/* TEXT DETAIL */
+.text3D {
+    color: #fff;
+    font-size: 5rem;
+    font-weight: bold;
+    font-family: Helvetica;
+    text-shadow:
+        0 1px 0 #ccc,
+        0 2px 0 #c9c9c9,
+        0 3px 0 #bbb,
+        0 4px 0 #b9b9b9,
+        0 5px 0 #aaa,
+        0 6px 1px rgba(0,0,0,.1),
+        0 0 5px rgba(0,0,0,.1),
+        0 1px 3px rgba(0,0,0,.3),
+        0 3px 5px rgba(0,0,0,.2),
+        0 5px 10px rgba(0,0,0,.25),
+        0 10px 10px rgba(0,0,0,.2),
+        0 20px 20px rgba(0,0,0,.15);
+}
+/* END TEXT DETAIL */
+/* STARS DETAIL */
+/*.rating label { font-size: 3.0rem; }*/
+.rating { float: left; }
+.rating input { display: none; }
+.rating label { color: #ccc; float: right; transition: color 0.2s; }
+.rating label:hover,
+.rating label:hover ~ label,
+.rating:not(:hover) > :checked ~ label { color: #FFD700; }
+/*
+.rating input:checked ~ label,
+.rating label:hover,
+.rating label:hover ~ label { color: #FFD700; }
+*/
+/* END STARS DETAIL */
+/* Tooltip */
+.bs-tooltip-left .arrow::before { border-left-color: #dc3545; }
+.tooltip-inner { color: #fff; background-color: #dc3545; }
+/* END Tooltip */
+/* Social */
+.social a {
+    color: #fff5b2;
+    transition: all .5s ease;
+    transform-origin: left;
+    transform: rotateY(-30deg);
+    text-shadow: 10px 0px 1px #131313, 10px 0px 1px #070707, 10px 0px 1px black, 10px 0px 1px black;
+}
+.social a:hover {
+    color: #202020;
+    transform: rotate(0deg);
+    text-shadow: 0px 0px 1px #131313, 0px 0px 1px #070707, 0px 0px 1px black, 0px 0px 1px black;
+}
+/* END Social */
+/* Modal */
+.modal_row input:focus { outline: none !important }
+.modal-header button { outline: none !important }
+#exampleModalCenter1 .modal-header, #exampleModalCenter1 .modal-footer { border: none; }
+/* END Modal */

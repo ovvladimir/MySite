@@ -1,0 +1,67 @@
+{% load movie_tag %}
+<div class="search">
+    <h5 class="text-primary">Поиск урока</h5>
+    <form action="{% url 'search' %}" method="get" class="form-inline my-2 my-lg-0">
+        <input type="search" placeholder="Введите название..." name="q" class="form-control mr-sm-1 border-primary" required="">
+        <button type="submit" class="btn btn-outline-primary my-1 my-sm-0">Найти</button>
+    </form>
+</div>
+
+<div class="card border-primary mt-4 p-3" style="max-width: 17.5rem;">
+    <form action="{% url 'filter' %}" method="get" name="filter">
+        <h5 class="text-primary">Темы</h5>
+        {% for genre in view.get_genres %}
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="genre" value="{{ genre.id }}">
+                <label class="form-check-label">
+                    {{ genre.name }}
+                </label>
+            </div>
+        {% endfor %}
+        {% comment "Закомментировать код" %}
+        <h5 class="text-primary mt-4">Год</h5>
+        {% for movie in view.get_years %}
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="year" value="{{ movie.year }}">
+                <label class="form-check-label">
+                    {{ movie.year }}
+                </label>
+            </div>
+        {% endfor %}
+        {% endcomment %}
+        <button type="submit" class="btn btn-outline-primary mt-2">Найти<i class='fas fa-search px-1'></i></button>
+    </form>
+</div>
+
+<div class="star">
+    <form action="{% url 'rating_stars' %}" method="get" name="rating_stars">
+    <h5 class="text-primary mt-4">{{ view.title }}</h5>
+    <ul class="ml-0 pl-0" style="list-style: none;">
+    {% for n in view.list_stars %}
+        <li>
+        {% for _ in view.list_stars %}
+            <i class="{% if forloop.counter > n %}far{% else %}fas{% endif %} fa-star text-warning" aria-hidden="true"></i>
+        {% endfor %}
+            <input type="submit" name="stars" value="{{ n }}"
+                   class="form-check-input text-danger font-italic ml-2 m-0 p-0" style="border: none !important; background: transparent;">
+            <i class="text-danger ml-3">.0</i>
+        </li>
+    {% endfor %}
+    </ul>
+    </form>
+</div>
+{% get_last_movies count=3 %}
+
+{% comment "Закомментировать код" %}
+
+{% regroup view.get_all by star_id as my_list %}
+{% for id in my_list %}
+<p>{{ id.grouper }}</p>
+{% endfor %}
+{% now "j F Y H:i" %}
+
+{% endcomment %}
+
+<style>
+    .star input:focus { outline: none !important }
+</style>

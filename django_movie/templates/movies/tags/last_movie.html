@@ -1,0 +1,17 @@
+{% load static %}
+<div class="">
+    <h5 class="text-primary mt-4">Последние добавленные</h5>
+    {% for movie in last_movies %}
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <img src="{% static 'images/' %}{{movie.poster}}" class="img-fluid" alt="" width="100">
+            </div>
+            <div class="col-md-8">
+                <a href="{{ movie.get_absolute_url }}" style="text-decoration: none;">
+                    <p class="text-danger mt-4">{{ movie.title }}</p>
+                </a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+<br>

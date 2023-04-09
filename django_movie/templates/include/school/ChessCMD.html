@@ -1,0 +1,213 @@
+{% load static %}
+<div class="card mb-4 text-dark border-light bg-light">
+    <p class="pt-2">
+    Кажется, совсем недавно мы восхищались собой, создавая простые программки в DOS.
+    Пытались что-то нарисовать с помощью символов, делали игры и т.д.
+    У меня до сих пор лежит установочная флешка с MS-DOS 6.22, которую я не так давно
+    адаптировал под современные компьютеры.
+    И это работает! Иногда я перезагружаю компьютер с флешки и играю в старый добрый Тетрис.
+    Если кому-то интересно, то флешку можно скачать
+    <a href="http://old-dos.ru/index.php?page=files&mode=files&do=show&id=6575">здесь</a>.
+    С приходом Windows осталась командная строка (cmd) и интерес к созданию консольных приложений не пропал.
+    Во всяком случае, поучиться здесь есть чему.
+    Я почему-то всегда был далек от мысли сделать шахматы в терминале. Может быть, казалось, что это сложно.
+    Но пришел час, и любопытство победило. Я взялся за шахматы и как всегда попытался сделать игру за
+    минимальное количество команд.
+    Сразу пришло в голову, что шахматная доска - это массив 8х8, а с массивами эффективно работать нам
+    позволяет модуль numpy.
+    Давайте перейдем от слов к делу, создадим файл chess.py и импортируем все, что нам нужно.
+    </p>
+    <pre><code class="python"><span class="badge float-right text-warning p-0">python</span>
+    import numpy as np
+    import os
+
+    os.system("")
+    </code></pre>
+    <p>
+    Создать шахматную доску поможет numpy.tile. Подробнее можно ознакомиться
+    <a href="https://numpy.org/doc/stable/reference/generated/numpy.tile.html">здесь</a>.
+    Шахматная доска имеет два цвета, и рисовать эти цвета в терминале нам помогут управляющие последовательности
+    ANSI. Кто не знаком - читайте <a href="https://en.wikipedia.org/wiki/ANSI_escape_code#graphics">здесь</a>.
+    Я выбрал понравившиеся цвета и положил их в переменные.
+    </p>
+    <pre><code class="python"><span class="badge float-right text-warning p-0">python</span>
+    c1, c2 = '\x1b[48;5;124m', '\x1b[48;5;172m'
+    reset = '\x1b[0m'
+    </code></pre>
+    <p>
+    Reset потребуется для сброса к цвету по умолчанию. Если вы работаете в Windows, то для корректной работы с ANSI
+    вставьте команду os.system("").<br>
+    Ну что ж - создаем шахматную доску.
+    </p>
+    <pre><code class="python"><span class="badge float-right text-warning p-0">python</span>
+    chessboard = np.tile(np.array([[c2, c1], [c1, c2]], dtype=str), (4, 4))
+    chessboard.flags.writeable = False
+    print(chessboard)
+    </code></pre>
+    <p>
+    Код я запускаю в Visual Studio Code.
+    На выходе получим массив 8х8 с перемешанными как нам нужно цветами.<br>
+    [['\x1b[48;5;172m' '\x1b[48;5;124m' '\x1b[48;5;172m' '\x1b[48;5;124m'  <br>
+      '\x1b[48;5;172m' '\x1b[48;5;124m' '\x1b[48;5;172m' '\x1b[48;5;124m'] <br>
+     ['\x1b[48;5;124m' '\x1b[48;5;172m' '\x1b[48;5;124m' '\x1b[48;5;172m'  <br>
+      '\x1b[48;5;124m' '\x1b[48;5;172m' '\x1b[48;5;124m' '\x1b[48;5;172m'] <br>
+     ['\x1b[48;5;172m' '\x1b[48;5;124m' '\x1b[48;5;172m' '\x1b[48;5;124m'  <br>
+      '\x1b[48;5;172m' '\x1b[48;5;124m' '\x1b[48;5;172m' '\x1b[48;5;124m'] <br>
+     ['\x1b[48;5;124m' '\x1b[48;5;172m' '\x1b[48;5;124m' '\x1b[48;5;172m'  <br>
+      '\x1b[48;5;124m' '\x1b[48;5;172m' '\x1b[48;5;124m' '\x1b[48;5;172m'] <br>
+     ['\x1b[48;5;172m' '\x1b[48;5;124m' '\x1b[48;5;172m' '\x1b[48;5;124m'  <br>
+      '\x1b[48;5;172m' '\x1b[48;5;124m' '\x1b[48;5;172m' '\x1b[48;5;124m'] <br>
+     ['\x1b[48;5;124m' '\x1b[48;5;172m' '\x1b[48;5;124m' '\x1b[48;5;172m'  <br>
+      '\x1b[48;5;124m' '\x1b[48;5;172m' '\x1b[48;5;124m' '\x1b[48;5;172m'] <br>
+     ['\x1b[48;5;172m' '\x1b[48;5;124m' '\x1b[48;5;172m' '\x1b[48;5;124m'  <br>
+      '\x1b[48;5;172m' '\x1b[48;5;124m' '\x1b[48;5;172m' '\x1b[48;5;124m'] <br>
+     ['\x1b[48;5;124m' '\x1b[48;5;172m' '\x1b[48;5;124m' '\x1b[48;5;172m'  <br>
+      '\x1b[48;5;124m' '\x1b[48;5;172m' '\x1b[48;5;124m' '\x1b[48;5;172m']]<br>
+    Осталось отобразить эти цвета в терминале, но нужно понять, что мы будем разукрашивать. И это будут просто пробелы.
+    В переменную sp положим два пробела и переберем наш chessboard с помощью цикла.
+    </p>
+    <pre><code class="python"><span class="badge float-right text-warning p-0">python</span>
+    sp = ' ' * 2
+    cell = ''
+    for index, value in np.ndenumerate(chessboard):
+        cell += f'{value}{sp}{reset}\n' if index[1] == 7 else f'{value}{sp}'
+    print(cell)
+    print(reset)
+    </code></pre>
+    <p>
+    print(reset) - сбрасывает цвета. В итоге видим следующую картинку.
+    </p>
+    <img class="img-fluid img-thumbnail" width="100" src="{% static 'images/r1.webp' %}"><br>
+    <p>
+    Теперь добавим цифры и буквы. Цифры возьмем из переменной index в цикле, а буквы напечатаем юникодом.
+    Как отображать символы юникода можно посмотреть
+    <a href="https://www.fileformat.info/info/unicode/char/0041/index.htm">здесь</a>. Немного изменим наш цикл.
+    </p>
+    <pre><code class="python"><span class="badge float-right text-warning p-0">python</span>
+    cell = f'{letters}\n8'
+    for index, value in np.ndenumerate(chessboard):
+        cell += f'{value}{sp}{reset}{8 - index[0]}\n{7 - index[0]}' \
+            if index[1] == 7 else f'{value}{sp}'
+    print(cell, f'\r{letters}\n')
+    print(reset)
+    </code></pre>
+    <p>
+    Теперь мы получили полноценную шахматную доску.
+    </p>
+    <img class="img-fluid img-thumbnail" width="100" src="{% static 'images/r2.webp' %}"><br>
+    <p>
+    Добавим на нашу доску шахматные фигуры. И напечатаем мы их с помощью
+    <a href="https://en.wikipedia.org/wiki/Miscellaneous_Symbols">набора символов</a>.
+    Я положил символы в переменные и добавил еще два цвета: белый и черный. Можно брать символы с фигурами
+    разного цвета, но я решил раскрашивать фигуры самостоятельно. Красный цвет нам еще понадобиться. Фигуры я положил
+    в словарь для удобства, в переменные кладу фигуры и раскрашиваю в нужный цвет, а переменные с фигурами
+    размещаю в массиве.
+    </p>
+    <pre><code class="python"><span class="badge float-right text-warning p-0">python</span>
+    chessman = {
+        "pawn": "\u2659", "rook": "\u265C", "kNight": "\u265E",
+        "bishop": "\u265D", "queen": "\u265B", "king": "\u265A"
+    }
+
+    black = '\x1b[30m'
+    white = '\x1b[97m'
+    red = '\x1b[91m'
+    clear = '\x1b[F\x1b[K'
+    reset = '\x1b[0m'
+    continues = '\x1b[12F\x1b[J'
+    player = ["White's", "Black's"]
+
+    wp, bp = f'{white}{chessman["pawn"]}', f'{black}{chessman["pawn"]}'
+    wr, br = f'{white}{chessman["rook"]}', f'{black}{chessman["rook"]}'
+    wk, bk = f'{white}{chessman["kNight"]}', f'{black}{chessman["kNight"]}'
+    wb, bb = f'{white}{chessman["bishop"]}', f'{black}{chessman["bishop"]}'
+    wq, bq = f'{white}{chessman["queen"]}', f'{black}{chessman["queen"]}'
+    wK, bK = f'{white}{chessman["king"]}', f'{black}{chessman["king"]}'
+    sp = ' '
+
+    array = np.array([
+        [br, bk, bb, bq, bK, bb, bk, br],
+        [bp, bp, bp, bp, bp, bp, bp, bp],
+        [sp, sp, sp, sp, sp, sp, sp, sp],
+        [sp, sp, sp, sp, sp, sp, sp, sp],
+        [sp, sp, sp, sp, sp, sp, sp, sp],
+        [sp, sp, sp, sp, sp, sp, sp, sp],
+        [wp, wp, wp, wp, wp, wp, wp, wp],
+        [wr, wk, wb, wq, wK, wb, wk, wr]
+    ], dtype=str)
+    </code></pre>
+    <p>
+    Здесь, надеюсь, все понятно. Теперь еще раз изменим наш цикл, добавив фигуры на доску.
+    </p>
+    <pre><code class="python"><span class="badge float-right text-warning p-0">python</span>
+    cell = f'{letters}\n8'
+    for index, value in np.ndenumerate(chessboard):
+        figure = array[index]
+        cell += f'{value}{figure}{sp}{reset}{8 - index[0]}\n{7 - index[0]}' \
+            if index[1] == 7 else f'{value}{figure}{sp}'
+    print(cell, f'\r{letters}\n')
+    </code></pre>
+    <img class="img-fluid img-thumbnail" width="100" src="{% static 'images/r3.webp' %}"><br>
+    <p>
+    Готово! В этой статье я не буду рассказывать, как подключать искусственный интеллект и т.д., но сделать игру, в
+    которую можно играть, самостоятельно контролируя правила, мы обязаны. Для этого я помещу наш цикл, а также код,
+    который будет управлять перемещением шахматных фигур, в def main().
+    </p>
+    <pre><code class="python"><span class="badge float-right text-warning p-0">python</span>
+    dl = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5, 'g': 6, 'h': 7}
+    dn = {'1': 7, '2': 6, '3': 5, '4': 4, '5': 3, '6': 2, '7': 1, '8': 0}
+    def main():
+        for .................
+
+        move = input(f'[q-Exit] {player[0]} move, for example e2e4 -> ')
+        if move != 'q':
+            try:
+                array[dn[move[3]], dl[move[2]]] = array[dn[move[1]], dl[move[0]]]
+                array[dn[move[1]], dl[move[0]]] = sp
+                player.reverse()
+            except (IndexError, BaseException):
+                input(f'{clear}{red}wrong move, press enter{reset}')
+        else:
+            print(f'{continues}{reset}[EXIT]')
+            return
+        print(continues, end='')
+        main()
+
+    if __name__ == "__main__":
+        main()
+    </code></pre>
+    <p>
+    Что здесь происходит? В цикле for рисуется доска с фигурами. Затем с помощью input задаем ход, например, e2e4
+    и в соответствии с ходом размещаем фигуры в массиве array. Нам в этом помогают словари dl и dn (соответственно
+    для букв и цифр, взятых из input). Если что-то не так в ходе, возвращаемся к input. Если вместо хода нажать
+    "q" - выходим из программы. Программа нам подсказывает, какие фигуры ходят. Переменная Continues нужна для того,
+    чтобы шахматная доска после каждого хода оставалась в терминале на том же месте. В целом, все просто.<br>
+    Python - удивительный язык. Мы видим, как в несколько строк кода можно создавать достаточно непростые программы.
+    Дальше мы сделаем шахматы уже в графическом интерфейсе.<br>
+    Скачать код можно с <a href="https://github.com/ovvladimir/Chess">github</a>. Файл chess.py.<br><br>
+    Но это еще не все. Есть бонус. Если вы запустите программу в cmd, то шахматные фигуры будут отображаться
+    прямоугольниками. Это значит, что шрифт Consolas, установленный в cmd по умолчанию, не поддерживает символы U2600.
+    Как быть? К счастью, в cmd можно выбрать шрифт MS Gothic. Но согласитесь, неудобно каждый раз менять шрифт вручную.
+    Мы сделаем автоматическую смену шрифтов. Создадим файл chess_font.py в директории, где расположен chess.py и
+    напишем следующий код.
+    </p>
+    <pre><code class="python"><span class="badge float-right text-warning p-0">python</span>
+    import os
+
+    if os.name == 'nt':
+        os.system('REG ADD HKCU\\Console /v FaceName /t REG_SZ /d "MS Gothic" /f')
+
+    os.system("start cmd /c python chess.py")
+
+    if os.name == 'nt':
+        os.system('REG ADD HKCU\\Console /v FaceName /t REG_SZ /d "Consolas" /f')
+    </code></pre>
+    <p>
+    Если запустить на выполнение файл с этим кодом, то сначала в cmd установится шрифт MS Gothic. Затем откроется cmd и
+    выполнится файл chess.py с основной программой. Шахматные фигуры будут отображаться нормально. Тут же шрифт
+    поменяется на шрифт по умолчанию для того чтобы, открыв cmd в следующий раз, мы увидели привычные нам буквы.
+    Если у вас операционная система не Windows, то просто запустится файл chess.py. В Linux вам этот скрипт не нужен.
+    Вот теперь точно все. Скачивайте файл chess_font.py <a href="https://github.com/ovvladimir/Chess">здесь</a>.
+    Удачи в программировании!
+    </p>
+</div>

@@ -1,0 +1,60 @@
+<div class="card mb-4 text-dark border-light bg-light">
+    <p class="pt-2">
+    Нам осталось разобраться, как сделать игру шахматы в веб-браузере.
+    Мы сделаем это с помощью модуля <a href="https://pypi.org/project/PySimpleGUIWeb/">PySimpleGUIWeb</a>.
+    Установить модуль можно командой:
+    </p>
+    <pre><code class="shell"><span class="badge float-right text-warning p-0">terminal</span>
+    pip install PySimpleGUIWeb
+    </code></pre>
+    <p>
+    Возьмем код, который мы написали при создании приложения с помощью модуля PySimpleGUI (тема "ChessGUI") и
+    внесем в него несколько изменений. Поменяем импорт.
+    </p>
+    <pre><code class="python"><span class="badge float-right text-warning p-0">python</span>
+    # import PySimpleGUI as sg
+    import PySimpleGUIWeb as sg
+    </code></pre>
+    <p>
+    Далее один из цветов я поменяю на коричневый, т.к. не все цвета поддерживаются браузерами.
+    </p>
+    <pre><code class="python"><span class="badge float-right text-warning p-0">python</span>
+    # COLORS = ('gold', 'coral3', 'gray85')
+    COLORS = ('gold', 'brown', 'gray85')
+    </code></pre>
+    <p>
+    Так же внесем изменения в аргумент text_color в def play() и списке layout.
+    </p>
+    <pre><code class="python"><span class="badge float-right text-warning p-0">python</span>
+    # text_color='gray' if not value or value.isalnum()
+    # else 'white' if ord(value) < 9818 else 'black')
+    text_color='white' if value and 9811 < ord(value) < 9818 else 'black')
+    </code></pre>
+    <p>
+    Удалим из кода команды, которые пока не поддерживаются модулем.
+    </p>
+    <pre><code class="python"><span class="badge float-right text-warning p-0">python</span>
+    window.bind("< Return >", 'button')
+    window['-OUTPUT-'].expand(expand_x=True)
+    window['-INPUT-'].expand(expand_x=True)
+    window['button'].expand(expand_x=True)
+    relief='raised'
+    </code></pre>
+    <p>
+    В виджетах Text и Input поменяем размер шрифта и установим размеры полей.
+    </p>
+    <pre><code class="python"><span class="badge float-right text-warning p-0">python</span>
+    layout=[[sg.Text(
+        text=value, size=(2, 1), justification='center',
+        border_width=2, pad=(1, 1), font='arial 14', key=index,
+        background_color=COLORS[2 if value not in chessman[1:-1, 1:-1] else (index[0] + index[1]) & 1],
+        text_color='white' if value and 9811 < ord(value) < 9818 else 'black')
+        for index, value in np.ndenumerate(chessman)][i:i + 10] for i in range(0, 100, 10)])],
+    [sg.Text(text=f'{player[0]} move, for example e2e4', key='-OUTPUT-', size=(22, 1),
+     text_color='green', font='arial 14', background_color='white')],
+    [sg.Input(focus=True, font='arial 16', justification='center', key='-INPUT-', size=(22, 0.8))],
+    </code></pre>
+    <p>
+    Вот и все. Запускаем код, откроется браузер и можно делать ходы. Все очень просто!<br>Удачи!
+    </p>
+</div>

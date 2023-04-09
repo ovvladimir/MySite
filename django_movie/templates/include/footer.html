@@ -1,0 +1,84 @@
+{% load static contact_tags %}
+<footer>
+    <div class="card">
+      <div class="row no-gutters">
+        <div class="col-md-3 bg-danger">
+            <h1 class="card-title p-3 text-white">Py<i class='fab fa-python'></i>School</h1>
+            <h5 class="card-text pt-3 pl-3 text-light">Catch on Social</h5>
+                <div class="social card-text pl-3">
+                    <a href="https://github.com/ovvladimir/">
+                        <span class="fab fa-github mr-2"></span>
+                    </a>
+                    <a href="https://www.youtube.com/">
+                        <span class="fab fa-youtube mr-2"></span>
+                    </a>
+                    <a href="https://www.facebook.com/">
+                        <span class="fab fa-facebook mr-2"></span>
+                    </a>
+                    <a href="https://twitter.com/">
+                        <span class="fab fa-twitter mr-2"></span>
+                    </a>
+                    <a href="https://dribbble.com/">
+                        <span class="fab fa-dribbble"></span>
+                    </a>
+                </div>
+        </div>
+        <div class="col-md-9">
+          <div class="card-body bg-secondary">
+            <p class="card-text text-white">
+                Если вы уже начали изучать Python и знаете как работают циклы, списки,
+                условные операторы и т.д., а так же хотите двигаться дальше и расширять
+                свои знания, смотрите мои видео. Я покажу как с помощью основных модулей
+                (numpy и т.п.) этого удивительного языка программирования можно создавать
+                от простых консольных приложений до GUI и приложений, которые работают
+                в браузерах. Вы освоите основные принципы написания кода и узнаете
+                насколько легко программировать на Python и какой мощностью обладает этот
+                язык программирования. Затронем так же работу в терминале, Django 3, JavaScript,
+                Vue.js, Bootstrap, JQuery, HTML, CSS и многое другое.
+            </p>
+            <h5 class="text-uppercase pt-3">
+                Contact Info</h5>
+            <div class="contact-info">
+                <i class="mb-2 text-white">email:</i>
+                <p><a class="text-white" href="mailto:info@example.com">ov.vladimir@mail.ru</a></p>
+                <h4 class="mb-2">Location</h4>
+                <p class="text-white">Russia</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid py-3 bg-light text-center">
+        <div class="row modal_row">
+            <input type="image" class="col-2 col-lg-1" src="{% static 'images/django.png' %}" data-toggle="modal" data-target="#exampleModalCenter2">
+            <p class="col-8 col-lg-10 my-auto">
+                © 2020 <a href="/">Py<i class='fab fa-python'></i>School.</a> All rights reserved.
+            </p>
+            <!-- move top icon -->
+            <i class="col-2 col-lg-1 fas fa-hand-point-up fa-3x text-primary" id="up" style="cursor: pointer;"></i>
+            <!-- //move top icon -->
+        </div>
+    </div>
+    <div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Django</h5>
+            <button type="button" class="close text-danger bg-light py-1 px-2" data-dismiss="modal" aria-label="Close"
+                    data-toggle="tooltip" data-placement="left" title="Закрыть">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <a href="https://www.djangoproject.com/">https://www.djangoproject.com/</a><br>
+            <a href="https://pypi.org/project/Django/">https://pypi.org/project/Django/</a><br>
+            <a href="https://getbootstrap.com/docs/4.5/getting-started/introduction/">https://getbootstrap.com/docs/4.5/getting-started/introduction/</a>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Закрыть</button>
+          </div>
+        </div>
+      </div>
+    </div>
+</footer>

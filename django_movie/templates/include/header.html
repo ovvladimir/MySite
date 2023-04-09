@@ -1,0 +1,31 @@
+{% load movie_tag %}
+<header>
+    <div class="container-fluid px-lg-5 w-100" id="font" style="background-color: #00000050;">
+        <div class="row py-4">
+            <div class="col-md-4 text-left">
+                <h1 class="text-white">Py<i class='fab fa-python'></i>School</h1>
+            </div>
+            <div class="col-md-8 text-right">
+                <a href="https://github.com/ovvladimir/"><i class="fab fa-github fa-lg" role="button"></i></a>
+                <a class="ml-3 text-uppercase" href="/" style="color: #dc3545;">Главная</a>
+                    {% if user.is_authenticated %}
+                        <span class="ml-3 text-primary">{{ user.username }}</span>
+                        <a class="ml-3 text-uppercase" href="{% url 'account_logout' %}">
+                            Выход
+                        </a>
+                    {% else %}
+                        <a class="ml-3 text-uppercase" href="{% url 'account_login' %}">
+                            Вход
+                        </a>
+                         <a class="ml-3 text-uppercase" href="{% url 'account_signup' %}">
+                            Регистрация
+                        </a>
+                    {% endif %}
+            </div>
+        </div>
+    </div>
+</header>
+<style>
+    header a { color: white; }
+    header a:hover { color: #dc3545; }
+</style>

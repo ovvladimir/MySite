@@ -1,0 +1,42 @@
+{% extends "account/base.html" %}
+{% block head_title %}Signup{% endblock %}
+
+{% block content %}
+<div class="card border-primary mb-3 text-center mx-auto" style="max-width: 30rem;">
+  <div class="card-header bg-primary">
+    <h1 class="card-title text-white">Форма регистрации</h1>
+  </div>
+
+  <p class="card-text">Уже есть аккаунт? Тогда, пожалуйста, <a href="{{ login_url }}">войдите</a>.</p>
+
+  <form id="signup_form" method="post" action="{% url 'account_signup' %}">
+    {% csrf_token %}
+    <div class="card-body my-0 py-0">
+    {{ form.as_p }}
+    </div>
+    {% if redirect_field_value %}
+    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+    {% endif %}
+    <button class="btn btn-primary btn-block mt-4" type="submit">Ввод &raquo;</button>
+  </form>
+</div>
+<script type="text/javascript">
+  $(function() {
+    $('#id_username').addClass('form-control');
+    $('#id_email').addClass('form-control');
+    $('#id_password1').addClass('form-control');
+    $('#id_password2').addClass('form-control');
+  });
+</script>
+<style>
+    .card-body label {
+      font-size: 0;
+    }
+    ul {
+        list-style-type: none;
+        margin-left: 0;
+        padding-left: 0;
+        color: red;
+    }
+</style>
+{% endblock %}

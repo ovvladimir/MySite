@@ -1,0 +1,156 @@
+{% load static %}
+<div class="card mb-4 text-dark bg-transparent border-light">
+    <p class="pt-2">
+    Мы с вами разобрались, как сделать приложение "chess" в терминале. Поняли, как это просто. Пойдем дальше
+    и сделаем уже оконное приложение, используя старый, но просто замечательный модуль
+    <a href="https://wiki.python.org/moin/TkInter">Tkinter</a>.<br>
+    Давайте создадим файл "chessW.py" и импортируем все необходимое.
+    </p>
+    <pre><code class="python"><span class="badge float-right text-warning p-0">python</span>
+    from tkinter import Tk, Frame, Text, Entry, W, E, S, N, \
+        Button, Label, RAISED
+    import numpy as np
+    import os
+    </code></pre>
+    <p>
+    Нам потребуется несколько переменных. Их назначение такое же, как и при создании приложения в терминале.
+    </p>
+    <pre><code class="python"><span class="badge float-right text-warning p-0">python</span>
+    COLORS = ('gold', 'coral3', 'gray90')
+    player = ["White's", "Black's"]
+    dl = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5, 'g': 6, 'h': 7}
+    dn = {'1': 7, '2': 6, '3': 5, '4': 4, '5': 3, '6': 2, '7': 1, '8': 0}
+    </code></pre>
+    <p>
+    Далее, с помощью <a href="https://en.wikipedia.org/wiki/Miscellaneous_Symbols">символов юникода</a>
+    создим массив chessman, в который на этот раз, кроме шахматный фигур, включим буквы и цифры.
+    </p>
+    <pre><code class="python"><span class="badge float-right text-warning p-0">python</span>
+    wp, bp = "\u2659", "\u265F"
+    wr, br = "\u2656", "\u265C"
+    wk, bk = "\u2658", "\u265E"
+    wb, bb = "\u2657", "\u265D"
+    wq, bq = "\u2655", "\u265B"
+    wK, bK = "\u2654", "\u265A"
+    s, sp = ' ' * 3, ' ' * 4
+
+    chessman = np.array([
+        [s, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', s],
+        [' 8 ', br, bk, bb, bq, bK, bb, bk, br, ' 8 '],
+        [' 7 ', bp, bp, bp, bp, bp, bp, bp, bp, ' 7 '],
+        [' 6 ', sp, sp, sp, sp, sp, sp, sp, sp, ' 6 '],
+        [' 5 ', sp, sp, sp, sp, sp, sp, sp, sp, ' 5 '],
+        [' 4 ', sp, sp, sp, sp, sp, sp, sp, sp, ' 4 '],
+        [' 3 ', sp, sp, sp, sp, sp, sp, sp, sp, ' 3 '],
+        [' 2 ', wp, wp, wp, wp, wp, wp, wp, wp, ' 2 '],
+        [' 1 ', wr, wk, wb, wq, wK, wb, wk, wr, ' 1 '],
+        [s, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', s]
+    ], dtype=str)
+    </code></pre>
+    <p>
+    Теперь перейдем к оформлению и создадим несколько виджетов. В общем фрейме, перебирая массив chessman,
+    мы раскрасим виджеты Label в нужные нам цвета и расставим их как в массиве chessman, вместе с шахматными фигурами.
+    Список lbl_list нам потребуется тогда, когда мы будем учить фигуры ходить.
+    </p>
+    <pre><code class="python"><span class="badge float-right text-warning p-0">python</span>
+    root = Tk()
+    fr = Frame(root, relief=RAISED, bd=20, bg='gray')
+    lbl_list = []
+    for index, value in np.ndenumerate(chessman):
+        color = 2 if value not in chessman[1:-1, 1:-1] else (index[0] + index[1]) & 1
+        lbl = Label(fr, text=value, background=COLORS[color],
+                    font='century 20' if color == 2 else 'arial 30', relief=RAISED)
+        lbl.grid(row=index[0], column=index[1], sticky=N + S + W + E)
+        lbl_list.append(lbl)
+    fr.pack(padx=4)
+    root.mainloop()
+    </code></pre>
+    <p>
+    Запустите код и посмотрите, как выглядит наша шахматная доска.
+    </p>
+    <img class="img-fluid img-thumbnail" width="100" src="{% static 'images/r4.webp' %}"><br>
+    <p>
+    Почти все готово. Добавим текстовое поле для вывода сообщений, поле ввода хода и кнопку, с помощью которой
+    будем отправлять ход в программу.
+    </p>
+    <pre><code class="python"><span class="badge float-right text-warning p-0">python</span>
+    text = Text(root, font='arial 14', width=0, height=0)
+    text.pack(fill='both')
+    text.tag_configure('tag-center', justify='center')
+    entry = Entry(root, font='arial 16 bold', justify='center')
+    entry.pack(fill='both')
+    entry.focus()
+    bt = Button(root, text='E N T E R', font='century 14 bold', fg='red', bd=4, command=play)
+    bt.pack(fill='both')
+    </code></pre>
+    <p>
+    Создадим def message, с помощью которого будем выводить сообщения в текстовое поле.
+    </p>
+    <pre><code class="python"><span class="badge float-right text-warning p-0">python</span>
+    def message(txt, clr):
+        text.delete(1.0, 'end')
+        text.insert(1.0, txt, 'tag-center')
+        text.configure(fg=clr)
+    </code></pre>
+    <p>
+    И добавим первое сообщение, которое мы увидим при запуске программы.
+    </p>
+    <pre><code class="python"><span class="badge float-right text-warning p-0">python</span>
+    message(f'{player[0]} move, for example e2e4', 'green')
+    </code></pre>
+    <p>
+    Учим фигуры ходить. Сделаем это точно так же, как и при создании консольного приложения.
+    Создадим def play, в котором будет крутиться игра. Def будет вызываться кнопкой (это уже сделано).
+    </p>
+    <pre><code class="python"><span class="badge float-right text-warning p-0">python</span>
+    def play(e=None):
+        move = entry.get()
+        entry.delete(0, 'end')
+        entry.focus()
+        try:
+            chessman[1:-1, 1:-1][dn[move[3]], dl[move[2]]] = chessman[1:-1, 1:-1][dn[move[1]], dl[move[0]]]
+            chessman[1:-1, 1:-1][dn[move[1]], dl[move[0]]] = sp
+            player.reverse()
+            message(f'{player[0]} move, for example e2e4', 'green')
+        except (IndexError, TypeError, BaseException):
+            message(f'Wrong move. {player[0]} move, for example e2e4', 'red')
+        else:
+            for ind in np.ndindex(chessman.shape):
+                lbl_list[int(f'{ind[0]}{ind[1]}')]['text'] = chessman[ind]
+    </code></pre>
+    <p>
+    С помощью списка lbl_list расставляем фигуры в соответствии с ходом. Остальное - как в прошлый раз.<br>
+    Добавим возможность передавать ход с помощью клавиши "Enter", поставим окно в нужное нам место на дисплее
+    и назовем его.
+    </p>
+    <pre><code class="python"><span class="badge float-right text-warning p-0">python</span>
+    root.bind('< Return >', play)
+    root.geometry('+10+10')
+    root.title('Chess')
+    </code></pre>
+    <p>
+    Как я и обещал, добавим в наш код несколько простых защит от неверного хода. Вставьте в def play сразу после try
+    следующие строки:
+    </p>
+    <pre><code class="python"><span class="badge float-right text-warning p-0">python</span>
+    if (dl[move[0]] == dl[move[2]] and dn[move[1]] == dn[move[3]]) or len(move) != 4 or \
+       (9824 > ord(chessman[1:-1, 1:-1][dn[move[1]], dl[move[0]]]) > 9817 and player[0] == "White's") or \
+       (9818 > ord(chessman[1:-1, 1:-1][dn[move[1]], dl[move[0]]]) > 9811 and player[0] == "Black's"):
+        move = sp
+    </code></pre>
+    <p>
+    Проверьте. Теперь мы не можем ходить на несуществующее или то же самое поле, не можем ходить белыми вместо черных и
+    наоборот, не можем в ходе писать цифры вместо букв или буквы вместо цифр и т.д.<br>
+    В заключение можно добавить иконку.
+    </p>
+    <pre><code class="python"><span class="badge float-right text-warning p-0">python</span>
+    icon = "ico.ico"
+    path = os.path.join(os.path.dirname(__file__), icon)
+    root.iconbitmap(path)
+    </code></pre>
+    <p>
+    Все готово! В следующем видео сделаем шахматы с помощтю современного модуля
+    <a href="https://pypi.org/project/PySimpleGUI/">PySimpleGUI</a>.<br>
+    Скачивайте файл chessW.py <a href="https://github.com/ovvladimir/Chess">здесь</a>. Удачи!
+    </p>
+</div>
