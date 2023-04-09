@@ -4,15 +4,4 @@ requests
 django-recaptcha3
 django-allauth
 django-embed-video
-
-
-Нет модулей:
-chardet - ставится только chardet
-click - не нужен
-django-ckeditor - нужен ли? Но поставил.
-django-js-asset - ставит django-ckeditor
-h11
-httptools - ставится только httptools
-six
-
-django-modeltranslation
+django-ckeditor
