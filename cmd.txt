@@ -10,6 +10,7 @@ pip install -r requirements.txt
 
 pip check
 python -Wa manage.py test
+python manage.py migrate
 python manage.py showmigrations --list
 
 Ctrl+C
