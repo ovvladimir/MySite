@@ -1,3 +1,4 @@
+# Обязательно
 Django==3.2.18
 Pillow
 requests
@@ -5,4 +6,10 @@ django-recaptcha3
 django-allauth
 django-embed-video
 django-ckeditor
+# Не обязательно
 python-dotenv
+# Для размещения на хостинге
+gunicorn
+whitenoise
+dj-database-url
+psycopg2-binary
